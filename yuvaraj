@@ -1,0 +1,110 @@
+1.CONFIGURE STATIS IP AND HOSTNAME ON SERVER?
+
+CONFIGURATION FOR STATIC IP ADDING ON REMOTE SERVER:
+PATH: vim /etc/network/interfaces
+
+auto eno1 --> ethernet name
+iface eno1 inet static --> 
+address 192.168.10.138 --> static ip address
+netmask 255.255.255.0 --> mask
+gateway 192.168.10.1 --> on premises you need to write
+name-servers 8.8.8.8  --> dns server
+
+CONFIGUARATION FOR HOSTNAME ADDING ON REMOTE SERVER:
+
+PATH: vim /etc/hostname and vi /etc/hosts
+write your own hostname
+
+2.INSTALL APACHE AND CHANGE THE DEFAULT PORT?
+
+for installing apache2 server on remoteserver commands:
+sudo apt-get update
+sudo apt-get install apache2
+
+To open the ports configuration file in the nano editor (The easiest one!), execute the following command.
+
+sudo nano /etc/apache2/ports.conf
+Now, replace Listen 80 with
+othervhostLog "|bin/rotatelogs /var/logs/other_vhosts_access.log.%Y-%m-%d-%H_%M_%S 5M" 
+logrotate -s /var/log/logstatus logrotate.conf
+For instance, for our sites, we’re going to make our directories like this:
+sudo mkdir -p /var/www/yuvaraj.com/public_html
+sudo mkdir -p /var/www/itaas.systech.com/public_html
+Grant Permissions
+sudo chown -R $USER:$USER /var/www/yuvaraj.com/public_html
+sudo chown -R $USER:$USER /var/www/itaas.systech.com/public_html
+Step Three — Create Demo Pages for Each Virtual Host
+vi /var/www/yuvaraj.com/public_html/index.html
+vi /var/www/itaas.systech.com/public_html/index.html
+In this file, create a simple HTML document that indicates the site it is connected to. My file looks like this:
+    
+<html>
+  <head>
+        <title>Welcome to iga.systech.com!</title>
+  </head>
+  <body>
+     <h1>Success!  The iga.systech.com virtual host is working!</h1>
+  </body>
+</html>
+
+Step Four — Create New Virtual Host Files
+Create the First Virtual Host File
+sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/yuvaraj.conf
+Open the new file in your editor with root privileges:
+	ServerAdmin admin@iga.systech.com
+        ServerName iga.systech.com
+        ServerAlias www.iga.systech.com
+	DocumentRoot /var/www/yuvaraj.com/public_html
+        
+
+	# Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+	# error, crit, alert, emerg.
+	# It is also possible to configure the loglevel for particular
+	# modules, e.g.
+	#LogLevel info ssl:warn
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+Step Five — Enable the New Virtual Host Files
+sudo a2ensite yuvaraj.conf
+sudo a2ensite itaas.systech.conf
+ 
+Next, disable the default site defined in 000-default.conf:
+$ sudo a2dissite 000-default.conf
+When you are finished, you need to restart Apache to make these changes take effect:
+$ sudo systemctl restart apache2
+
+Step Six — Set Up Local Hosts File (Optional)
+127.0.1.1 iga.systech.com
+127.0.1.2 itaas.systech.com
+
+CREATE TABLE employee ( id smallint unsigned not null auto_increment, name varchar(20) not null, constraint pk_example primary key (id) );
+INSERT INTO example ( id, name ) VALUES ( null, 'Sample data' );
+
+CREATE  TABLE  `employee`.`interview` (
+  `first-name` VARCHAR(25) NOT NULL ,
+  `last-name`  VARCHAR(25) NOT NULL,
+  `date_of_birth` DATE ,
+  `contact_number` VARCHAR(75) ,
+  `email` VARCHAR(255) )
+ENGINE = intervewdb;
+
+SET storage_engine = InnoDB;
+
+INSERT INTO `employee` VALUES ('yuvaraj','yadav','1997-10-26', '0987786553', 'yuvaraj@gmail.com');
+ALTER TABLE `users` ADD `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY
+
+CREATE USER 'yuvaraj'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON * . * TO 'yuvaraj'@'localhost';
+GRANT read/write ON interview.employees TO ‘yuvaraj’@'localhost’;
+
+REVOKE read ON interview.employee FROM ‘yuvaraj’@‘localhost’;
+REVOKE ALL ON interview FROM 'yuvaraj'@'localhost';
+DROP USER ‘username’@‘localhost’;
+
+
+GRANT ALL PRIVILEGES ON *.* TO yuvaraj@localhost IDENTIFIED BY 'password' WITH GRANT OPTION;
+
+
+
+
